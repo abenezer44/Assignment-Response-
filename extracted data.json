@@ -1,0 +1,16 @@
+[
+    {
+        "type": "write",
+        "session_id": 12345,
+        "file_id": 67890,
+        "offset": 0,
+        "length": 1024,
+        "data": "file_data_here",
+        "source_ip": "192.168.1.78",
+        "source_port": 55770,
+        "destination_ip": "192.168.1.53",
+        "destination_port": 445,
+        "timestamp": 1403194573.483786000
+    },
+    ...
+]
