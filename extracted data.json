@@ -2,7 +2,7 @@
     {
         "type": "write",
         "session_id": 12345,
-        "file_id": 67890,
+        "file_id": 0x00010000000108e5,
         "offset": 0,
         "length": 1024,
         "data": "file_data_here",
@@ -11,6 +11,5 @@
         "destination_ip": "192.168.1.53",
         "destination_port": 445,
         "timestamp": 1403194573.483786000
-    },
-    ...
+    }
 ]
