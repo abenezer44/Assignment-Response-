@@ -25,8 +25,11 @@ Installation
 	Install Python 3.x from the official Python website.
 	Install the required libraries using pip(pip install scapy impacket)
 Usage
-	Make sure you have a PCAP file containing SMBv2 packets for examination.
-	Enter the path to your PCAP file and the desired output JSON file name in the file_path and output_file variables of the script.
-	Launch the script.
+Clone or download the repository containing the script.
+Ensure you have a PCAP file with SMBv2 packets to analyze.
+Run the script from the command line with the input PCAP file and output JSON file as arguments:
+ example:  
+Suppose you have a PCAP file named smb.pcap in the directory C:\Users\YourName\Documents
+cd C:\Users\YourName\Documents\python assignment.py smb.pcap "extracted data.json"
 
 
