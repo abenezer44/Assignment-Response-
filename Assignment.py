@@ -1,4 +1,5 @@
 import json
+import argparse
 from scapy.all import rdpcap, TCP, IP
 from impacket.smb3structs import *
 from impacket.smb3 import SMB3
@@ -79,10 +80,16 @@ def save_to_json(data, output_file):
     with open(output_file, 'w') as f:
         json.dump(data, f, indent=4)
 
-# Usage
-file_path = "C:\Users\abenezer.kassu\Downloads\smb.pcap"
-output_file = "C:\Users\abenezer.kassu\Desktop\extracted_data.json"
-extracted_data = read_pcap(file_path)
-save_to_json(extracted_data, output_file)
+def main():
+    parser = argparse.ArgumentParser(description="Extract SMBv2 packet data and metadata from a PCAP file.")
+    parser.add_argument("input_pcap", help="Path to the input PCAP file")
+    parser.add_argument("output_json", help="Path to the output JSON file")
+    args = parser.parse_args()
 
-print(f"Data extracted and saved to {output_file}")
+    extracted_data = read_pcap(args.input_pcap)
+    save_to_json(extracted_data, args.output_json)
+
+    print(f"Data extracted and saved to {args.output_json}")
+
+if __name__ == "__main__":
+    main()
