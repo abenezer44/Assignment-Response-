@@ -27,9 +27,17 @@ Installation
 Usage
 Clone or download the repository containing the script.
 Ensure you have a PCAP file with SMBv2 packets to analyze.
-Run the script from the command line with the input PCAP file and output JSON file as arguments:
- example:  
-Suppose you have a PCAP file named smb.pcap in the directory C:\Users\YourName\Documents
-cd C:\Users\YourName\Documents\python assignment.py smb.pcap "extracted data.json"
+
+Steps to Run the Script
+stwp 1: Open the Command Line Interface (CLI)
+step 2:Navigate to the Directory Containing the Script
+	cd path/to/your/script
+step 3: Run the Script with Command Line Arguments
+Run the script from the command line with the input PCAP file, output JSON file, and output directory as arguments:
+	python smb_extractor.py "path to the pcap file/smb.pcap" "extracted_data.json" output_dir
+If the file is saved in C:/Users/abenezer/Documents on a Windows OS the command will be   
+	python smb_extractor.py "C:/Users/YourName/Documents/smb.pcap" "extracted_data.json" output_dir
+
+
 
 
