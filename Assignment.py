@@ -1,5 +1,6 @@
 import json
 import argparse
+import os
 from scapy.all import rdpcap, TCP, IP
 from impacket.smb3structs import *
 from impacket.smb3 import SMB3
@@ -62,9 +63,11 @@ def parse_smb_packet(packet):
                 return extract_smb_read_response(smb)
     return None
 
-def read_pcap(file_path):
+def read_pcap(file_path, output_dir):
     packets = rdpcap(file_path)
     extracted_data = []
+    file_id_data_map = {}  # To store data fragments by file_id
+
     for packet in packets:
         data = parse_smb_packet(packet)
         if data:
@@ -73,7 +76,33 @@ def read_pcap(file_path):
             data['destination_ip'] = packet[IP].dst
             data['destination_port'] = packet[TCP].dport
             data['timestamp'] = packet.time
+
+            if data['type'] in ['write', 'read_response']:
+                file_id = data['file_id']
+                if file_id not in file_id_data_map:
+                    file_id_data_map[file_id] = []
+                file_id_data_map[file_id].append(data['data'])
+
             extracted_data.append(data)
+
+    for file_id, data_fragments in file_id_data_map.items():
+        file_data = b''.join(data_fragments)
+        file_name = f'file_{file_id}.dat'
+        file_path = os.path.join(output_dir, file_name)
+        with open(file_path, 'wb') as f:
+            f.write(file_data)
+
+        file_metadata = {
+            'file_name': file_name,
+            'file_size': len(file_data),
+            'source_ip': packet[IP].src,
+            'source_port': packet[TCP].sport,
+            'destination_ip': packet[IP].dst,
+            'destination_port': packet[TCP].dport,
+            'timestamp': packet.time
+        }
+        extracted_data.append(file_metadata)
+
     return extracted_data
 
 def save_to_json(data, output_file):
@@ -84,9 +113,13 @@ def main():
     parser = argparse.ArgumentParser(description="Extract SMBv2 packet data and metadata from a PCAP file.")
     parser.add_argument("input_pcap", help="Path to the input PCAP file")
     parser.add_argument("output_json", help="Path to the output JSON file")
+    parser.add_argument("output_dir", help="Directory to save the extracted files")
     args = parser.parse_args()
 
-    extracted_data = read_pcap(args.input_pcap)
+    if not os.path.exists(args.output_dir):
+        os.makedirs(args.output_dir)
+
+    extracted_data = read_pcap(args.input_pcap, args.output_dir)
     save_to_json(extracted_data, args.output_json)
 
     print(f"Data extracted and saved to {args.output_json}")
